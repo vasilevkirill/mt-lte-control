@@ -18,7 +18,7 @@ func runWebServer() {
 		Funcs:        nil,
 	}
 	client.HTMLRender = ginview.New(gv)
-
+	gin.SetMode(gin.DebugMode)
 	webHandlers(client)
 	runStr := fmt.Sprintf("%s:%d", Config.GetString("web.address"), Config.GetInt("web.port"))
 	err := client.Run(runStr)
@@ -33,15 +33,16 @@ func webHandlers(router *gin.Engine) {
 }
 
 func webGetInfo(ctx *gin.Context) {
-	res, err := getInfoOverApi()
-	if err != nil {
-		ctx.JSON(200, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+
+	res := gin.H{}
+	res["lteInfo"] = R.readStatusMapKey("lteInfo")
+	res["script"] = R.readStatusMapKey("script")
+	res["simSlot"] = R.readStatusMapKey("simSlot")
+
 	ctx.JSON(200, res)
 }
 func webGetHome(ctx *gin.Context) {
-	ctx.HTML(200, "home.gohtml", nil)
+	res := gin.H{}
+	res["control"] = Config.Get("control")
+	ctx.HTML(200, "home.gohtml", res)
 }

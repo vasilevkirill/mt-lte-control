@@ -3,24 +3,29 @@ package main
 import (
 	"fmt"
 	"gopkg.in/routeros.v2"
+	"gopkg.in/routeros.v2/proto"
 	"time"
 )
 
-func getInfoOverApi() (interface{}, error) {
-	timeout := 4 * time.Second
-	connString := fmt.Sprintf("%s:%d", Config.GetString("router.ip"), Config.GetInt("router.apiport"))
-	conn, err := routeros.DialTimeout(connString, Config.GetString("router.user"), Config.GetString("router.password"), timeout)
-	if err != nil {
-		return nil, err
+func routerRePairGetValue(re []*proto.Sentence, key string) string {
+	if len(re) == 0 {
+		return ""
 	}
-	r, err := conn.RunArgs(ar)
-
-	return nil, nil
+	if key == "" {
+		return ""
+	}
+	for _, v := range re {
+		for _, vv := range v.List {
+			if vv.Key == key {
+				return vv.Value
+			}
+		}
+	}
+	return ""
 }
-
-func sendCommand(command []string) (interface{}, error) {
-	timeout := 4 * time.Second
-	connString := fmt.Sprintf("%s:%d", Config.GetString("router.ip"), Config.GetInt("router.apiport"))
+func sendCommand(command []string) ([]*proto.Sentence, error) {
+	timeout := 10 * time.Second
+	connString := fmt.Sprintf("%s:%d", Config.GetString("router.address"), Config.GetInt("router.apiport"))
 	conn, err := routeros.DialTimeout(connString, Config.GetString("router.user"), Config.GetString("router.password"), timeout)
 	if err != nil {
 		return nil, err

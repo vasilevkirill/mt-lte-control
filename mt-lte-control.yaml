@@ -2,7 +2,23 @@ web:
   address: 0.0.0.0
   port: 8084
 router:
+  storetime: 10
+  script: mt-lte-control
   address: 10.3.3.1
   apiport: 8728
   password: asdp987asmyndop9aishu
   user: mt-lte-control
+control:
+  reset-usb:
+    enable: true
+    name: Перезапустить питание USB
+  reset-modem:
+    enable: true
+    name: Перезапустить Modem
+  run-script:
+    enable: true
+    name: Запустить Скрипт
+  change-simslot:
+    enable: true
+    name: Сменить
+    values: ["1","2","3"]

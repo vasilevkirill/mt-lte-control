@@ -9,4 +9,5 @@ var (
 	Log         = logrus.New()
 	Config      = viper.New()
 	configPaths = []string{".", "/etc", "/etc/defaults", "c:\\", "c:\\windows\\"}
+	R           Router
 )
